@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>GE32 join</title>
+<meta property="og:title" content="Join my GE32 server">
+<meta property="og:description" content="Click to open the GE32 Launcher and join the room.">
+<style>
+  :root { --bg:#0d0f12; --card:#171a1f; --gold:#d8b24a; --txt:#e8e4d8; --dim:#8d8a80; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--txt); font:16px/1.5 Segoe UI, system-ui, sans-serif; }
+  main { max-width:520px; margin:12vh auto 0; padding:0 16px; }
+  .card { background:var(--card); border:1px solid #2a2e35; border-radius:14px; padding:28px; }
+  h1 { margin:0 0 6px; font-size:22px; color:var(--gold); letter-spacing:.04em; }
+  .code { font:600 24px/1.2 Consolas, monospace; letter-spacing:.12em; margin:14px 0 20px; word-break:break-all; }
+  a.btn { display:inline-block; background:var(--gold); color:#14110a; font-weight:700; text-decoration:none; padding:12px 22px; border-radius:10px; }
+  p { color:var(--dim); font-size:14px; }
+  .err { color:#e07a5f; }
+</style>
+</head>
+<body>
+<main><div class="card">
+  <h1 id="title">GE32</h1>
+  <div class="code" id="code"></div>
+  <a class="btn" id="go" href="#">Open GE32 Launcher</a>
+  <p id="info">The launcher starts and joins by itself. If nothing happens, open GE32-Launcher.exe once (it registers the link), then click the button again. You can also paste the code into the launcher's Join field.</p>
+</div></main>
+<script>
+  // https://froddzei.github.io/join/#CODE/Name -> ge32://join/CODE/Name (the code stays in the #, it never reaches a server)
+  var h = location.hash.replace(/^#\/?/, "").split("/");
+  var code = h[0] || "", name = "";
+  try { name = decodeURIComponent(h[1] || "").slice(0, 20); } catch (e) {}
+  if (!/^[A-Za-z0-9.:-]{4,30}$/.test(code)) {
+    document.getElementById("title").textContent = "GE32";
+    document.getElementById("code").textContent = "";
+    document.getElementById("go").style.display = "none";
+    document.getElementById("info").className = "err";
+    document.getElementById("info").textContent = "This link has no room code. Ask the host to copy the code again.";
+  } else {
+    var url = "ge32://join/" + code + (name ? "/" + encodeURIComponent(name) : "");
+    document.getElementById("title").textContent = name ? name + "'s GE32 server" : "GE32 server";
+    document.getElementById("code").textContent = code;
+    document.getElementById("go").href = url;
+    location.href = url;
+  }
+</script>
+</body>
+</html>
