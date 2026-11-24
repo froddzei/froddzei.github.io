@@ -27,10 +27,12 @@
   <p id="info">The launcher starts and joins by itself. If nothing happens, open GE32-Launcher.exe once (it registers the link), then click the button again. You can also paste the code into the launcher's Join field.</p>
 </div></main>
 <script>
-  // https://froddzei.github.io/join/#CODE/Name -> ge32://join/CODE/Name (the code stays in the #, it never reaches a server)
+  // https://froddzei.github.io/join/#CODE/Name[/TAG] -> ge32://join/CODE/Name[/TAG] (the code stays in the #, it never reaches a server)
+  // TAG = the host's version tag (launcher LQ3): the launcher warns before joining if the versions/maps differ
   var h = location.hash.replace(/^#\/?/, "").split("/");
   var code = h[0] || "", name = "";
   try { name = decodeURIComponent(h[1] || "").slice(0, 20); } catch (e) {}
+  var tag = /^[A-Za-z0-9-]{6,60}$/.test(h[2] || "") ? h[2] : "";
   if (!/^[A-Za-z0-9.:-]{4,30}$/.test(code)) {
     document.getElementById("title").textContent = "GE32";
     document.getElementById("code").textContent = "";
@@ -38,7 +40,7 @@
     document.getElementById("info").className = "err";
     document.getElementById("info").textContent = "This link has no room code. Ask the host to copy the code again.";
   } else {
-    var url = "ge32://join/" + code + (name ? "/" + encodeURIComponent(name) : "");
+    var url = "ge32://join/" + code + (tag ? "/" + encodeURIComponent(name) + "/" + tag : name ? "/" + encodeURIComponent(name) : "");
     document.getElementById("title").textContent = name ? name + "'s GE32 server" : "GE32 server";
     document.getElementById("code").textContent = code;
     document.getElementById("go").href = url;
